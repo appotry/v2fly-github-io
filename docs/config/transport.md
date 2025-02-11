@@ -16,7 +16,8 @@
     "httpSettings": {},
     "quicSettings": {},
     "dsSettings": {},
-    "grpcSettings": {}
+    "grpcSettings": {},
+    "hy2steriaSettings": {}
 }
 ```
 
@@ -41,6 +42,10 @@
 针对 QUIC 连接的配置。
 
 > `dsSettings`: [DomainSocketObject](transport/domainsocket.md)
+
+针对 hy2 连接的配置。
+
+> `hy2steriaSettings`: [Hysteria2](transport/hy2.md)
 
 针对 Domain Socket 连接的配置。
 
@@ -157,7 +162,8 @@ TLS 配置。TLS 由 Golang 提供，支持 TLS 1.3，不支持 DTLS。
 
 > `pinnedPeerCertificateChainSha256`: \[ string \]
 
-使用标准编码格式表示的远程服务器的证书链的SHA256散列值。在设置后，远程服务器的证书链的散列值必须为列表中的数值之一。(v4.38.0+)
+使用标准编码格式表示的远程服务器的证书链的 SHA256 散列值。在设置后，远程服务器的证书链的散列值必须为列表中的数值之一。(v4.38.0+)
+
 <!--
 此数值可以使用V2Ray自带的 v2ctl 工具的 certChainHash 工具根据服务器的证书链文件进行计算(按照管理，这个文件的名字一般叫 fullchain.pem )。如果没有中间证书（如自签发证书），证书链的散列值和证书本身的散列值相同。-->
 
@@ -277,7 +283,9 @@ TLS 配置。TLS 由 Golang 提供，支持 TLS 1.3，不支持 DTLS。
     "tcpFastOpen": false,
     "tcpFastOpenQueueLength": 4096,
     "tproxy": "off",
-    "tcpKeepAliveInterval": 0
+    "tcpKeepAliveInterval": 0,
+    "bindToDevice": "eth0",
+    "mptcp": false
 }
 ```
 
@@ -321,3 +329,16 @@ TLS 配置。TLS 由 Golang 提供，支持 TLS 1.3，不支持 DTLS。
 TCP 保持活跃的数据包的发送间隔，以秒为单位（仅适用于 Linux）。 (v4.39.0+)
 
 0 代表保持默认值。
+
+> `bindToDevice`: string
+
+将连接绑定到指定的网络设备（Linux: v5.0.6+, Windows/Darwin: v5.2.0+）。
+
+> `mptcp`: true | false
+
+是否启用多路径TCP（仅适用于Linux）。
+
+* `true`: 打开 MPTCP 。如果另一端的主机不支持 MPTCP，MPTCP 将回退为普通 TCP。
+* `false`: 关闭 MPTCP 。
+
+当此项不存在时，将使用系统默认设置。可用于入站和出站连接。

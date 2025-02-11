@@ -1,14 +1,22 @@
 # Configuration File Format (Draft)
 
+:::tip
+The document for V4 version of the config can be found [here](/en_US/config/overview.md).
+:::
+
 ## Overview
 
 In the V5 major release, a new configuration schema for users is introduced. This configuration format is designed to replace the previous version of configuration format. Currently this format is in the drafting phase, and may change at any time.
+
+:::tip
+To run your configure file in V5, execute `./v2ray run -c $configure_file_name -format jsonv5`
+:::
 
 ```json
 {
     "log": {},
     "dns": {},
-    "routing": {},
+    "router": {},
     "inbounds": [],
     "outbounds": [],
     "services": {}
@@ -27,17 +35,17 @@ Built-in DNS client. Specify hostname resolution settings.
 
 Local DNS will be used if this entry is not set.
 
-> `routing`: [RoutingObject](routing.md)
+> `router`: [RoutingObject](router.md)
 
 Routing.
 
 All traffic will be sent to the first outbound if this entry is left empty.
 
-> `inbounds`: \[ [InboundObject](inbounds.md) \]
+> `inbounds`: \[ [InboundObject](inbound.md) \]
 
 Inbounds. Describe the listener for incoming connections.
 
-> `outbounds`: \[ [OutboundObject](outbounds.md) \]
+> `outbounds`: \[ [OutboundObject](outbound.md) \]
 
 Outbounds. Describe the configuration for outgoing connections.
 
@@ -54,35 +62,32 @@ They are not required for the essential functionality of the software. However, 
 
 ```json
 {
-    "accessLogType": "None",
-    "accessLogPath": "file path",
-    "errorLogType": "File",
-    "errorLogPath": "file path",
-    "errorLogLevel": "Warning"
+    "access":{},
+    "error":{}
 }
 ```
 
-> `accessLogType`: "None" | "Console" | "File"
+> `access`: LogSpecObject
+
+Access log settings.
+
+> `error`: LogSpecObject
+
+Error log settings.
+
+## LogSpecObject
+
+> `type`: "None" | "Console" | "File"
 
 * `"None"`：Log will be discarded.
 * `"Console"`：Log will be outputed to standard output.
 * `"File"`：Log will be outputed to a file.
 
-> `accessLogPath`: string
+> `path`: string
 
-File path of log. It should be a valid path string, such as `"/tmp/v2ray/_access.log"` (Linux) or`"C:\\Temp\\v2ray\\_access.log"` (Windows).
+File path of log. It should be a valid path string, such as `"/tmp/v2ray/_error.log"` (Linux) or `"C:\\Temp\\v2ray\\_error.log"` (Windows).
 
-> `errorLogType`: "None" | "Console" | "File"
-
-* `"None"`：Log will be discarded.
-* `"Console"`：Log will be outputed to standard output.
-* `"File"`：Log will be outputed to a file.
-
-> `errorLogPath`: string
-
-File path of error log. It should be a valid path string, such as `"/tmp/v2ray/_error.log"` (Linux) or `"C:\\Temp\\v2ray\\_error.log"` (Windows).
-
-> `errorLogLevel`: "Debug" | "Info" | "Warning" | "Error" | "None"
+> `level`: "Debug" | "Info" | "Warning" | "Error" | "None"
 
 Level of log. Default value is `"warning"`。
 

@@ -247,7 +247,11 @@ When `usage` is `"verify"`, both `keyFile` and `key` can be empty.
 {
     "mark": 0,
     "tcpFastOpen": false,
-    "tproxy": "off"
+    "tcpFastOpenQueueLength": 4096,
+    "tproxy": "off",
+    "tcpKeepAliveInterval": 0,
+    "bindToDevice": "eth0",
+    "mptcp": false
 }
 ```
 
@@ -268,6 +272,10 @@ Whether to enable [TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%
   * Linux 3.16: The system is turned on by default and no configuration is required.
   * FreeBSD 10.3
 
+> `tcpFastOpenQueueLength`: number
+
+[TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80) queue length for inbound connections. Default value is `4096`. Only available in Linux. (v4.43.0+)
+
 > `tproxy`: "redirect" | "tproxy" | "off"
 
 Whether to enable transparent proxy (only for Linux).
@@ -281,3 +289,22 @@ Transparent proxy requires Root or CAP\_NET\_ADMIN authority.
 :::tip
 When `followRedirect` is specified in [Dokodemo-door](protocols/dokodemo.md) and `sockopt.tproxy` is empty, the value of `sockopt.tproxy` will be set to `"redirect"`.
 :::
+
+> `tcpKeepAliveInterval`: number
+
+The interval in seconds between sending TCP keep-alive packets (only for Linux). (v4.39.0+)
+
+0 means keep the default value.
+
+> `bindToDevice`: string
+
+Bind the connection to the specified network device (Linux: v5.0.6+, Windows/Darwin: v5.2.0+).
+
+> `mptcp`: true | false
+
+Whether to enable Multipath TCP (only for Linux).
+
+* `true`: MPTCP is turned on. If the host on the other side doesn't support MPTCP, MPTCP will fall back to using TCP.
+* `false`: MPTCP is turned off.
+
+When this item does not exist, the system default setting is used. Can be used for inbound and outbound connections.
